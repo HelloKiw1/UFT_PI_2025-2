@@ -12,12 +12,19 @@ Repositório destinado ao armazenamento e desenvolvimento dos trabalhos prático
 
 ---
 
-## 📝 Trabalho 01 — Interpolação
+## 📝 Trabalhos  
+
+### 🔹 Trabalho 01 — Interpolação
 **Título:** *Interpolação por Vizinho Mais Próximo e Interpolação Bilinear (redução e ampliação)*  
 
 📅 **Entrega:** 28/08/2025  
-📧 **Submissão:** glendabotelho@uft.edu.br  
-⚠️ **Observação:** É necessário apresentar o código no final da aula.  
+
+---
+
+### 🔹 Trabalho 02 — Conectividade & Rotulação
+**Título:** *Rotulação de Componentes Conectados (4 e 8-conectividade)*  
+
+📅 **Entrega:** 04/09/2025  
 
 ---
 
@@ -25,12 +32,20 @@ Repositório destinado ao armazenamento e desenvolvimento dos trabalhos prático
 ```
 UFT_PI_2025-2/
 ├─ index.py                 # Menu inicial para escolher e rodar os trabalhos
-├─ requirements.txt         # Dependências do projeto
-├─ README.md                # Este arquivo
+├─ src/
+│  ├─ menu.py               # Questionário global (seleção do trabalho)
+│  └─ trabalhos/
+│     ├─ t01_interpolacao/  # Trabalho 01 - Interpolação
+│     │   ├─ main.py
+│     │   ├─ algorithms/    # Algoritmos de interpolação
+│     │   └─ io_utils.py
+│     └─ t02_rotulacao/     # Trabalho 02 - Conectividade & Rotulação
+│         ├─ main.py
+│         └─ algorithms/    # Algoritmos de rotulação
 ├─ data/                    # Imagens de entrada para testes
 ├─ outputs/                 # Resultados gerados automaticamente
-├─ src/
-│  └─ trabalhos/
+├─ requirements.txt         # Dependências do projeto
+└─ README.md                # Este arquivo
 ```
 
 ---
@@ -48,23 +63,24 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 3. Executar pelo **índice interativo**
+### 3. Rodar o menu interativo
 ```powershell
 python index.py
 ```
-➡️ Aparecerá um menu perguntando qual trabalho deseja rodar, a imagem de entrada, o método e o fator de escala.  
+➡️ Será exibido um menu perguntando **qual trabalho** deseja executar.  
+Cada trabalho possui seu **questionário próprio** (parâmetros específicos).  
 
 ---
 
-## 📊 Saída
-- Os resultados são salvos automaticamente em `outputs/` com timestamp no nome.  
-- Uma janela será aberta exibindo **Original vs Resultado** para comparação.  
+## 📊 Saídas
+
+- Todos os resultados são salvos automaticamente em `outputs/` com timestamp no nome.  
+- **Trabalho 01:** mostra **Original vs Resultado (Interpolação)**.  
+- **Trabalho 02:** mostra **Imagem Grayscale, Binária e Rotulada (cores aleatórias por componente)**, além de salvar a imagem binária e a rotulada em disco.  
 
 ---
 
 ## ✅ Dependências
 - [numpy](https://numpy.org/)  
 - [pillow](https://pillow.readthedocs.io/en/stable/)  
-- [matplotlib](https://matplotlib.org/) (visualização)  
-
----
+- [matplotlib](https://matplotlib.org/)  

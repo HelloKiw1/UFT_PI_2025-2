@@ -1,15 +1,3 @@
-"""
-Ponto de entrada do Trabalho 01 — Interpolação.
-
-Uso:
-    # interativo (se quiser perguntar parâmetros aqui)
-    python -m src.trabalhos.t01_interpolacao.main
-
-    # chamando a função diretamente (usado pelo index.py do repositório)
-    from src.trabalhos.t01_interpolacao.main import run
-    run(imagem="data/flor.jpg", metodo="bilinear", escala=2.0)
-"""
-
 from __future__ import annotations
 import argparse
 from datetime import datetime
@@ -20,17 +8,9 @@ from .algorithms import resize_nearest, resize_bilinear
 from .io_utils import load_image, save_image
 
 
-def run(imagem: str | None = None, metodo: str = "bilinear", escala: float = 2.0) -> Path:
+def run(imagem: str | None = None, metodo: str | None = "bilinear", escala: float | None = 2.0) -> Path:
     """
-    Executa o Trabalho 01.
-
-    Parâmetros:
-        imagem : caminho do arquivo de entrada (string)
-        metodo : 'vizinho' | 'bilinear'
-        escala : fator de escala (>1 amplia; <1 reduz)
-
-    Retorna:
-        Path do arquivo salvo em outputs/
+    Executa o Trabalho 01 — Interpolação (vizinho/bilinear).
     """
     if imagem is None:
         imagem = input("Caminho da imagem (ex: data/flor.jpg): ").strip()
@@ -43,7 +23,7 @@ def run(imagem: str | None = None, metodo: str = "bilinear", escala: float = 2.0
         raise ValueError("Método inválido. Use 'vizinho' ou 'bilinear'.")
 
     try:
-        escala = float(escala)
+        escala = float(escala if escala is not None else input("Escala (>1 amplia; <1 reduz) [2.0]: ") or "2.0")
     except Exception:
         raise ValueError("Escala deve ser um número. Exemplo: 0.5, 2.0, 1.25")
 
@@ -72,7 +52,7 @@ def run(imagem: str | None = None, metodo: str = "bilinear", escala: float = 2.0
 
     print(f"✅ Resultado salvo em: {out_path}")
 
-    # visualizar
+    # visualizar (best effort)
     try:
         plt.figure(figsize=(8, 4))
         plt.subplot(1, 2, 1)
@@ -88,10 +68,25 @@ def run(imagem: str | None = None, metodo: str = "bilinear", escala: float = 2.0
         plt.tight_layout()
         plt.show()
     except Exception as e:
-        # caso ambiente sem backend gráfico
         print(f"(Aviso) Não foi possível exibir a figura: {e}")
 
     return out_path
+
+
+def questionario():
+    """
+    Questionário específico do Trabalho 01 (chamado pelo menu global).
+    """
+    imagem = input("Caminho da imagem (ex: data/flor.jpg): ").strip() or "data/flor.jpg"
+    metodo = input("Método (vizinho/bilinear) [bilinear]: ").strip().lower() or "bilinear"
+    esc_txt = input("Escala (>1 amplia, <1 reduz) [2.0]: ").strip() or "2.0"
+    try:
+        escala = float(esc_txt)
+    except Exception:
+        print("Escala inválida — usando 2.0.")
+        escala = 2.0
+
+    run(imagem=imagem, metodo=metodo, escala=escala)
 
 
 def _cli():
