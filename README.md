@@ -40,7 +40,7 @@ UFT_PI_2025-2/
 ### 1. Criar ambiente virtual
 ```powershell
 python -m venv .venv
-.\.venv\Scriptsctivate
+.\.venv\Scripts\activate
 ```
 
 ### 2. Instalar dependências
