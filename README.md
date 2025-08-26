@@ -65,7 +65,7 @@ pip install -r requirements.txt
 
 ### 3. Rodar o menu interativo
 ```powershell
-python index.py
+python index.py --menu
 ```
 ➡️ Será exibido um menu perguntando **qual trabalho** deseja executar.  
 Cada trabalho possui seu **questionário próprio** (parâmetros específicos).  
