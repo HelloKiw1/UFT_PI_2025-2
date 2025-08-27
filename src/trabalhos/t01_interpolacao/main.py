@@ -13,7 +13,7 @@ def run(imagem: str | None = None, metodo: str | None = "bilinear", escala: floa
     Executa o Trabalho 01 — Interpolação (vizinho/bilinear).
     """
     if imagem is None:
-        imagem = input("Caminho da imagem (ex: data/flor.jpg): ").strip()
+        imagem = input("Caminho da imagem (ex: data/flor.png): ").strip()
 
     if not imagem:
         raise ValueError("É necessário informar o caminho da imagem.")
@@ -77,7 +77,7 @@ def questionario():
     """
     Questionário específico do Trabalho 01 (chamado pelo menu global).
     """
-    imagem = input("Caminho da imagem (ex: data/flor.jpg): ").strip() or "data/flor.jpg"
+    imagem = input("Caminho da imagem (ex: data/flor.png): ").strip() or "data/flor.png"
     metodo = input("Método (vizinho/bilinear) [bilinear]: ").strip().lower() or "bilinear"
     esc_txt = input("Escala (>1 amplia, <1 reduz) [2.0]: ").strip() or "2.0"
     try:
@@ -91,7 +91,7 @@ def questionario():
 
 def _cli():
     parser = argparse.ArgumentParser(description="Trabalho 01 — Interpolação (vizinho/bilinear)")
-    parser.add_argument("--imagem", type=str, help="Caminho da imagem de entrada (ex.: data/flor.jpg)")
+    parser.add_argument("--imagem", type=str, help="Caminho da imagem de entrada (ex.: data/flor.png)")
     parser.add_argument("--metodo", type=str, default="bilinear", help="vizinho | bilinear")
     parser.add_argument("--escala", type=float, default=2.0, help=">1 amplia; <1 reduz (ex.: 0.5, 2.0)")
 

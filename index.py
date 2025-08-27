@@ -8,7 +8,7 @@ Usos:
 
   # 2) Modo direto (sem menu): chama o run() do trabalho escolhido
   # Interpolação (Trabalho 1)
-  python index.py --trabalho 1 --imagem data/flor.jpg --metodo bilinear --escala 2.0
+  python index.py --trabalho 1 --imagem data/flor.png --metodo bilinear --escala 2.0
 
   # Rotulação (Trabalho 2)
   python index.py --trabalho 2 --imagem data/manchas.png --thresh 127 --conectividade 4
