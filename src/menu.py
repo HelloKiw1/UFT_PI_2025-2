@@ -5,7 +5,9 @@ import importlib
 TRABALHOS = {
     "1": ("Interpolação (Vizinho + Bilinear)", "src.trabalhos.t01_interpolacao.main:questionario"),
     "2": ("Conectividade & Rotulação (4/8)",    "src.trabalhos.t02_rotulacao.main:questionario"),
-    "3": ("Operações Aritméticas & Geométricas", None),  # delega para o próprio T03
+    "3": ("Operações Aritméticas & Geométricas","src.trabalhos.t03_operacoes.main_t03:questionario"),
+    "5": ("Processamento de Histogramas",       "src.trabalhos.t05_histogramas.main_t05:questionario"),
+    "6": ("Filtro da Média (suavização)",       "src.trabalhos.t06_media.main_t06:questionario"),
 }
 
 def _resolver_callable(target: str):
@@ -25,12 +27,6 @@ def questionario_global():
 
     nome, target = TRABALHOS[escolha]
     print(f"Selecionado: {nome}\n")
-
-    if escolha == "3":
-        # 👉 delega para o questionário minimalista do T03 (sem perguntar 'out')
-        from src.trabalhos.t03_operacoes.main_t03 import questionario as t03_questionario
-        t03_questionario()
-        return
 
     callable_ = _resolver_callable(target)
     callable_()
