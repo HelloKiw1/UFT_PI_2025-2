@@ -30,7 +30,12 @@ O filtro deveria:
 Se você precisar de suporte a imagens coloridas, aplique o filtro por canal (R,G,B) ou
 faça a conversão prealável para grayscale.
 
-## Como a implementação funciona (passo-a-passo)
+## Como a implementação atual funciona (passo-a-passo)
+
+Esta versão do repositório usa a implementação direta (ingênua) do filtro da
+média — isto é, a média k×k é calculada somando explicitamente os pixels da janela
+para cada posição. É simples e didática, porém menos eficiente que a versão com
+imagem integral.
 
 1. Normalização do tipo de dado
 
@@ -40,7 +45,7 @@ faça a conversão prealável para grayscale.
 2. Validação de `k`
 
    - O código valida que `k` seja ímpar e ≥ 1. Janelas pares não têm um único pixel
-     central, então não são permitidas.
+     central, portanto não são permitidas.
 
 3. Padding / tratamento de bordas
 
@@ -54,29 +59,15 @@ faça a conversão prealável para grayscale.
    - O padding permite calcular janelas centradas nos pixels na vizinhança das bordas
      sem sair dos limites do array.
 
-4. Imagem integral (para eficiência)
+4. Cálculo ingênuo das médias
 
-   - A implementação usa a técnica da _imagem integral_ (integral image). A função
-     `_integral_image(img)` computa somas cumulativas em 2D e coloca o resultado num
-     array `I` com shape `(H+1, W+1)`, onde `I[y,x]` é a soma do retângulo
-     `[0..y-1, 0..x-1]` na imagem original.
+   - Para cada pixel `(y,x)` da imagem original, o algoritmo soma os valores de
+     `padded[y : y+k, x : x+k]` (janela k×k) usando loops explícitos e depois divide
+     pela área `k*k` para obter a média.
 
-   - Usando `I`, a soma de qualquer retângulo pode ser obtida com quatro acessos e
-     três operações aritméticas (inclusão-exclusão):
+5. Conversão e retorno
 
-     S = I[y2, x2] - I[y1, x2] - I[y2, x1] + I[y1, x1]
-
-5. Soma dos blocos k×k e média
-
-   - `_box_sum_via_integral(padded, k)` constrói a imagem integral de `padded` e
-     calcula a soma de cada bloco k×k para todas as posições correspondentes aos
-     pixels da imagem original em tempo O(1) por pixel.
-
-   - A média é `block_sum / (k*k)`.
-
-6. Conversão e retorno
-
-   - O resultado é convertido com `ensure_u8()` para garantir `uint8` e limites 0..255.
+   - O resultado (float) é convertido com `ensure_u8()` para `uint8` e retornado.
 
 ## Complexidade
 
@@ -84,26 +75,17 @@ faça a conversão prealável para grayscale.
 - Com imagem integral, o custo passa a O(H·W) (quatro acessos por pixel), o que é
   muito mais eficiente para janelas grandes.
 
-## Tratamento de bordas — efeito de cada modo
+## Tratamento de borda (fixo: zero)
 
-- zero (constant)
-  - Preenche externamente com zeros.
-  - Efeito: bordas tendem a ficar mais escuras (artefato de halo escuro), principalmente
-    para janela grande.
+Esta implementação utiliza apenas o tratamento de borda `zero` (padding com
+zeros). Ou seja, regiões fora da imagem são tratadas como valor 0 ao computar a
+média das janelas k×k. Esse método é simples e determinístico, mas introduz um
+halo escuro nas margens para janelas grandes.
 
-- replicate (edge)
-  - Repete o valor do pixel mais externo para além da borda.
-  - Efeito: mantém a intensidade da borda sem introduzir valores externos; costuma
-    produzir resultados visualmente mais naturais em imagens com transições suaves.
+Resumo do efeito:
 
-- reflect (reflect)
-  - Espelha a vizinhança interna ao redor da borda (padrão tipo espelho).
-  - Efeito: reduz transições bruscas e costuma produzir menos artefatos que `zero`.
-
-- wrap (wrap)
-  - Usa a imagem como se fosse periódica (a borda direita se conecta com a esquerda).
-  - Efeito: útil para sinais periódicos; geralmente produz artefatos pouco naturais
-    em imagens naturais (cria continuação da cena a partir da outra extremidade).
+- Preenche externamente com zeros (borda preta).
+- Efeito: bordas tendem a ficar mais escuras, especialmente com janelas maiores.
 
 ## Exemplo de uso (linha de comando)
 

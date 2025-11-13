@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 # IO do T01 (grayscale)
 from src.trabalhos.t01_interpolacao.io_utils import load_image, save_image
+# Importar a implementação atual do filtro da média
 from .algorithms import mean_filter
 
 # ---------- utilidades ----------
@@ -38,23 +39,24 @@ def _show_side_by_side(title_l: str, img_l: np.ndarray,
         print(f"(Aviso) Não foi possível exibir as figuras: {e}")
 
 # ---------- run ----------
-def run_media(imagem: str, k: int = 3, border: str = "zero",
+def run_media(imagem: str, k: int = 3,
               out: str | None = None, visualizar: bool = True) -> Path:
     """
     Executa o Filtro da Média com janela k×k e tratamento de bordas.
     border ∈ {zero, replicate, reflect, wrap}.
     """
     img = load_image(imagem)
-    out_img = mean_filter(img, k=k, border=border)
+    # o tratamento de borda é fixo para 'zero'
+    out_img = mean_filter(img, k=k)
 
     base = Path(imagem).stem
-    extra = f"k{k}_{border}"
+    extra = f"k{k}_zero"
     out_path = Path(out) if out else _auto_out("t06_media", base, extra=extra)
     save_image(out_img, out_path)
-    print(f"✅ [media k={k}, border={border}] salvo em: {out_path}")
+    print(f"✅ [media k={k}, border=zero] salvo em: {out_path}")
 
     if visualizar:
-        _show_side_by_side("Original", img, f"Média {k}×{k} ({border})", out_img)
+        _show_side_by_side("Original", img, f"Média {k}×{k} (zero)", out_img)
     return out_path
 
 # ---------- questionário ----------
@@ -62,18 +64,18 @@ def questionario():
     print("\n=== T06 — Filtro da Média (suavização) ===")
     imagem = _ask("Caminho da imagem", default="data/flor.png")
     k = int(_ask("Tamanho da janela k (ímpar)", default="3"))
-    border = _ask("Borda (zero|replicate|reflect|wrap)", default="zero").lower()
-    run_media(imagem=imagem, k=k, border=border, visualizar=True)
+    # Tratamento de borda fixo: zero
+    run_media(imagem=imagem, k=k, visualizar=True)
 
 # ---------- CLI ----------
 def _cli():
     """
     Exemplos:
-      # k=3, borda zero (default)
-      python -m src.trabalhos.t06_media.main_t06 media --imagem data/flor.png --k 3 --border zero
+    # k=3 (borda fixa: zero)
+    python -m src.trabalhos.t06_media.main_t06 media --imagem data/flor.png --k 3
 
-      # borda periódica (wrap) com k=5
-      python -m src.trabalhos.t06_media.main_t06 media --imagem data/flor.png --k 5 --border wrap
+    # exemplo com k=5
+    python -m src.trabalhos.t06_media.main_t06 media --imagem data/flor.png --k 5
     """
     p = argparse.ArgumentParser(description="T06 — Filtro da Média (suavização)")
     sub = p.add_subparsers(dest="cmd")
@@ -81,13 +83,13 @@ def _cli():
     pm = sub.add_parser("media", help="Filtro da Média")
     pm.add_argument("--imagem", required=True)
     pm.add_argument("--k", type=int, default=3)
-    pm.add_argument("--border", choices=["zero", "replicate", "reflect", "wrap"], default="zero")
+    # Borda removida: o tratamento é fixo para "zero"
     pm.add_argument("--out")
     pm.add_argument("--no-show", action="store_true")
 
     args = p.parse_args()
     if args.cmd == "media":
-        run_media(imagem=args.imagem, k=args.k, border=args.border, out=args.out, visualizar=not args.no_show)
+        run_media(imagem=args.imagem, k=args.k, out=args.out, visualizar=not args.no_show)
     else:
         questionario()
 
