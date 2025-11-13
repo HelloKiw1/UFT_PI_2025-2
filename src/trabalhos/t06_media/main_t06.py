@@ -63,7 +63,7 @@ def run_media(imagem: str, k: int = 3,
 def questionario():
     print("\n=== T06 — Filtro da Média (suavização) ===")
     imagem = _ask("Caminho da imagem", default="data/flor.png")
-    k = int(_ask("Tamanho da janela k (ímpar)", default="3"))
+    k = int(_ask("Tamanho da janela k (ímpar)", default="7"))
     # Tratamento de borda fixo: zero
     run_media(imagem=imagem, k=k, visualizar=True)
 
