@@ -8,20 +8,13 @@ def ensure_u8(x: np.ndarray) -> np.ndarray:
 # tratamento de bordas (apenas ZERO)
 # ----------------------------
 def _pad(img: np.ndarray, pad: int) -> np.ndarray:
-    """
-    Aplica padding constante com zeros ao redor da imagem.
-    Esta implementação suporta apenas o modo 'zero' (preenche com 0).
-    """
     if pad <= 0:
         return img
     return np.pad(img, ((pad, pad), (pad, pad)), mode="constant", constant_values=0)
 
 def mean_filter(img: np.ndarray, k: int = 3) -> np.ndarray:
     """
-    Implementação direta do filtro da média usando padding com zeros (borda fixa).
-
     Parâmetros:
-    - img: imagem 2D (grayscale) `np.ndarray` (0..255);
     - k: tamanho da janela (ímpar);
     Observação: o tratamento de borda é fixo para 'zero'.
     """
@@ -39,8 +32,8 @@ def mean_filter(img: np.ndarray, k: int = 3) -> np.ndarray:
         for x in range(W):
             s = 0
             # soma manual da janela kxk
-            for dy in range(k):
-                py = y + dy
+            for dy in range(k): 
+                py = y + dy 
                 row = padded[py]
                 for dx in range(k):
                     s += int(row[x + dx])
